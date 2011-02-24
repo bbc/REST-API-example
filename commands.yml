@@ -1,0 +1,52 @@
+tests:
+- - Get list of Things
+  - GET /thing/
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/"
+- - Create a new Thing
+  - POST /thing/
+  - "curl -i -H 'Accept: application/json' -d 'name=Foo&status=new' http://localhost:7000/thing"
+- - Get a specific Thing
+  - GET /thing/id
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/1"
+- - Get a non-existent Thing
+  - GET /thing/id
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/9999"
+- - Create another new Thing
+  - POST /thing/
+  - "curl -i -H 'Accept: application/json' -d 'name=Bar&junk=rubbish' http://localhost:7000/thing"
+- - Get list of Things again
+  - GET /thing/
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/"
+- - Change a Thing's state
+  - PUT /thing/:id/status/changed
+  - "curl -i -H 'Accept: application/json' -X PUT http://localhost:7000/thing/1/status/changed"
+- - Get changed Thing
+  - GET /thing/id
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/1"
+- - Change a Thing
+  - PUT /thing/:id
+  - "curl -i -H 'Accept: application/json' -X PUT -d 'name=Foo&status=changed2' http://localhost:7000/thing/1"
+- - Attempt to change a Thing using partial params
+  - PUT /thing/:id
+  - "curl -i -H 'Accept: application/json' -X PUT -d 'status=changed3' http://localhost:7000/thing/1"
+- - Attempt to change a Thing using invalid params
+  - PUT /thing/:id
+  - "curl -i -H 'Accept: application/json' -X PUT -d 'id=99&status=changed4' http://localhost:7000/thing/1"
+- - Change a Thing using the _method hack
+  - POST /thing/:id?_method=POST
+  - "curl -i -H 'Accept: application/json' -X POST -d 'name=Baz&_method=PUT' http://localhost:7000/thing/1"
+- - Change a Thing using the _method hack in the url
+  - POST /thing/:id?_method=POST
+  - "curl -i -H 'Accept: application/json' -X POST -d 'name=Qux' http://localhost:7000/thing/1?_method=PUT"
+- - Delete a Thing
+  - DELETE /thing/id
+  - "curl -i -H 'Accept: application/json' -X DELETE http://localhost:7000/thing/1/"
+- - Try to delete same Thing again
+  - DELETE /thing/id
+  - "curl -i -H 'Accept: application/json' -X DELETE http://localhost:7000/thing/1/"
+- - Get deleted Thing
+  - GET /thing/1
+  - "curl -i -H 'Accept: application/json' http://localhost:7000/thing/1"
+- - Delete a Thing using the _method hack
+  - DELETE /thing/id
+  - "curl -i -H 'Accept: application/json' -X POST -d'_method=DELETE' http://localhost:7000/thing/2/"
