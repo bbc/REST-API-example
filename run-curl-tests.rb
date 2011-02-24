@@ -38,14 +38,21 @@ end
 tests = YAML.load(ARGF.read)
 dbg tests
 
-header = <<EOT
+want_org = ARGV.delete("--org")
+
+def indent(txt, level = 4)
+  txt.split(/\n/).map{ |line| (" " * level) + line }.join("\n")
+end
+
+if want_org
+  header = <<EOT
 #+BEGIN_HEADER
 #+TITLE: curl tests of REST API
 #+SETUPFILE: ~/org/setup.org
 #+END_HEADER
 EOT
 
-template = <<EOT
+  template = <<EOT
 ** <%= title %>
 
 : <%= url %>
@@ -55,13 +62,40 @@ template = <<EOT
 
 #+END_SRC
 
-*** Output
+*** Response
 #+BEGIN_EXAMPLE
 <%= stdout %>
 
 #+END_EXAMPLE
 
 EOT
+else
+  # markdown template
+
+  header = <<EOT
+# REST API example
+
+The REST API to the example app is described below.
+
+EOT
+
+  template = <<EOT
+## <%= title %>
+
+### Request
+
+`<%= url %>`
+
+<%= indent(cmd) %>
+
+
+### Response
+
+<%= indent(stdout) %>
+
+
+EOT
+end
 
 puts header
 

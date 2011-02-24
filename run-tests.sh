@@ -5,23 +5,32 @@ function kill_unicorn() {
     kill $pid
   fi
 }
+if [ "$1" = "org" ]; then
+  WANT_ORG_OUTPUT="--org"
+fi
+
 kill_unicorn
 # Env
 export RUBYLIB=$RUBYLIB:$(pwd)
 export RACK_ENV=test
-export DOCUMENT=curl-tests.org
-# Delete old test.db
-if [ -e $RACK_ENV.db ]; then
-  rm $RACK_ENV.db
+export DOCUMENT=curl-tests
+
+if [ -n "$WANT_ORG_OUTPUT" ]; then
+  export EXT=.org
+else
+  export EXT=.md
 fi
+
 # Start unicorn
 unicorn -p 7000 &
-echo Waiting for unicorn to start up
-sleep 3
-echo Running tests
-ruby run-curl-tests.rb commands.yml | sed -r 's/\x0D//g' > $DOCUMENT
+echo Waiting for unicorn to start up && sleep 3
+ruby run-curl-tests.rb $WANT_ORG_OUTPUT commands.yml | sed -r 's/\x0D//g' > ${DOCUMENT}${EXT}
 kill_unicorn
-# less curl-tests.org
-echo Generating HTML output
-emacs -q --batch --visit=$DOCUMENT --funcall org-export-as-html-batch &> /dev/null
-gnome-open curl-tests.html
+
+# format using org-mode if requested
+if [ -n "$WANT_ORG_OUTPUT" ]; then
+  echo Generating HTML output
+  emacs -q --batch --visit=${DOCUMENT}${EXT} --funcall org-export-as-html-batch &> /dev/null
+  gnome-open ${DOCUMENT}.html
+fi
+
