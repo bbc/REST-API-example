@@ -1,4 +1,5 @@
 source "http://rubygems.org"
+
 gem "data_objects"
 gem "datamapper"
 gem "dm-aggregates"
@@ -13,10 +14,6 @@ gem "dm-serializer"
 gem "dm-timestamps"
 gem "dm-types"
 gem "dm-validations"
-# production
-gem "do_mysql"
-# development
-gem "do_sqlite3"
 gem "extlib"
 gem "json"
 gem "rack-cache"
@@ -24,3 +21,11 @@ gem "rack-contrib"
 gem "sinatra"
 gem "systemu"
 gem "unicorn"
+
+group :production do
+  gem "do_mysql"
+end
+
+group :development do
+  gem "do_sqlite3"
+end
