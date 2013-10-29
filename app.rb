@@ -10,7 +10,7 @@ require 'time'
 require 'pp'
 
 ### datamapper requires
-require 'datamapper'
+require 'data_mapper'
 require 'dm-types'
 require 'dm-timestamps'
 require 'dm-validations'

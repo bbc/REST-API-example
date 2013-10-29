@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 gem "data_objects"
-gem "datamapper"
+gem "data_mapper"
 gem "dm-aggregates"
 gem "dm-constraints"
 gem "dm-core"
